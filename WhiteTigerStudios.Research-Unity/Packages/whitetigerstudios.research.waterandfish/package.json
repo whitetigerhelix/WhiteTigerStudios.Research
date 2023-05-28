@@ -1,9 +1,9 @@
 {
   "name": "whitetigerstudios.research.waterandfish",
   "version": "1.0.0",
-  "displayName": "WTSR: Water and Fish",
+  "displayName": "WhitetigerStudios.Research.WaterAndFish",
   "description": "Research from our labs: Efficient procedural water and huge crowds of fish.  Based on great tutorial: https://www.raywenderlich.com/7880445-unity-job-system-and-burst-compiler-getting-started",
-  "unity": "2019.4",
+  "unity": "2021.3",
   "unityRelease": "16f1",
   "dependencies": {
     "com.unity.burst": "1.4.3",
@@ -15,7 +15,7 @@
     "WhiteTigerStudios"
   ],
   "author": {
-    "name": "WaterAndFish",
+    "name": "Chris Oje",
     "email": "chrisoje@helionoctis.com"
   },
   "type": "library",

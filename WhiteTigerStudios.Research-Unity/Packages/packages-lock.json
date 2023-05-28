@@ -134,6 +134,12 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "whitetigerstudios.research.platformer": {
+      "version": "file:whitetigerstudios.research.platformer",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "whitetigerstudios.research.waterandfish": {
       "version": "file:whitetigerstudios.research.waterandfish",
       "depth": 0,

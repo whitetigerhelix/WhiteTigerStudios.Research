@@ -1,9 +1,6 @@
 {
-    "name": "whitetigerstudios.research",
-    "rootNamespace": "",
+    "name": "whitetigerstudios.research.platformer",
     "references": [
-        "whitetigerstudios.research.platformer",
-        "whitetigerstudios.research.waterandfish"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,5 +1,5 @@
 {
-    "name": "whitetigerstudios.research.waterandfish.runtime",
+    "name": "whitetigerstudios.research.waterandfish",
     "references": [
         "Unity.Burst",
         "Unity.Collections",
