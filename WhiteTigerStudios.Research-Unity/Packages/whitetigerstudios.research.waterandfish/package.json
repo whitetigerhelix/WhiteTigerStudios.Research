@@ -1,5 +1,5 @@
 {
-  "name": "whitetigerstudios.research.waterandfish",
+  "name": "com.whitetigerstudios.research.waterandfish",
   "version": "1.0.0",
   "displayName": "WhitetigerStudios.Research.WaterAndFish",
   "description": "Research from our labs: Efficient procedural water and huge crowds of fish.  Based on great tutorial: https://www.raywenderlich.com/7880445-unity-job-system-and-burst-compiler-getting-started",

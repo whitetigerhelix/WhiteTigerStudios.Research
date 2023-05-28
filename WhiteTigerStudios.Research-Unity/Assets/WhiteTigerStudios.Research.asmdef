@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "whitetigerstudios.research.platformer",
-        "whitetigerstudios.research.waterandfish"
+        "whitetigerstudios.research.waterandfish",
+        "SynthCoder"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

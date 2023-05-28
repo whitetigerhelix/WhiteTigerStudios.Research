@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.synthcoder": {
+      "version": "file:SynthCoder",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.burst": {
       "version": "1.6.6",
       "depth": 0,
@@ -134,13 +140,13 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
-    "whitetigerstudios.research.platformer": {
+    "com.whitetigerstudios.research.platformer": {
       "version": "file:whitetigerstudios.research.platformer",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}
     },
-    "whitetigerstudios.research.waterandfish": {
+    "com.whitetigerstudios.research.waterandfish": {
       "version": "file:whitetigerstudios.research.waterandfish",
       "depth": 0,
       "source": "embedded",
