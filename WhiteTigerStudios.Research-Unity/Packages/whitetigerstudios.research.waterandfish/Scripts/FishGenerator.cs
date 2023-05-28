@@ -38,192 +38,194 @@ using UnityEngine.Jobs;
 using math = Unity.Mathematics.math;
 using random = Unity.Mathematics.Random;
 
-public class FishGenerator : MonoBehaviour
+namespace WhitetigerStudios.Research.WaterAndFish
 {
-    private PositionUpdateJob positionUpdateJob;
-
-    private JobHandle positionUpdateJobHandle;
-
-    // The velocities keep track of the velocity of each fish throughout the lifetime of the game, 
-    // so that you can simulate continuous movement.
-    private NativeArray<Vector3> velocities;
-
-    // You can’t have a NativeArray of transforms, as you can’t pass reference types between threads. 
-    // So, Unity provides a TransformAccessArray, which contains the value type information of a transform 
-    // including its position, rotation and matrices. The added advantage is, any modification you make to an 
-    // element of the TransformAccessArray will directly impact the transform in the scene.
-    private TransformAccessArray transformAccessArray;
-
-    [Header("References")]
-    public Transform waterObject;
-    public Transform objectPrefab;
-
-    [Header("Spawn Settings")]
-    public int amountOfFish;
-    public Vector3 spawnBounds;
-    public float spawnHeight;
-    public int swimChangeFrequency;
-    public List<Color> fishColors = new();
-    public Transform spawnContainer;
-
-    [Header("Settings")]
-    public float swimSpeed;
-    public float turnSpeed;
-
-    private void Start()
+    public class FishGenerator : MonoBehaviour
     {
-        // Initialize velocities with a persistent allocator of size amountOfFish, which is a pre-declared variable.
-        velocities = new NativeArray<Vector3>(amountOfFish, Allocator.Persistent);
+        private PositionUpdateJob positionUpdateJob;
 
-        // Initialize transformAccessArray with size amountOfFish.
-        transformAccessArray = new TransformAccessArray(amountOfFish);
+        private JobHandle positionUpdateJobHandle;
 
-        for (int i = 0; i < amountOfFish; i++)
-        {
+        // The velocities keep track of the velocity of each fish throughout the lifetime of the game, 
+        // so that you can simulate continuous movement.
+        private NativeArray<Vector3> velocities;
 
-            float distanceX =
-            Random.Range(-spawnBounds.x / 2, spawnBounds.x / 2);
+        // You can’t have a NativeArray of transforms, as you can’t pass reference types between threads. 
+        // So, Unity provides a TransformAccessArray, which contains the value type information of a transform 
+        // including its position, rotation and matrices. The added advantage is, any modification you make to an 
+        // element of the TransformAccessArray will directly impact the transform in the scene.
+        private TransformAccessArray transformAccessArray;
 
-            float distanceZ =
-            Random.Range(-spawnBounds.z / 2, spawnBounds.z / 2);
+        [Header("References")]
+        public Transform waterObject;
+        public Transform objectPrefab;
 
-            // Create a random spawn point within spawnBounds.
-            Vector3 spawnPoint = (transform.position + Vector3.up * spawnHeight) + new Vector3(distanceX, 0, distanceZ);
+        [Header("Spawn Settings")]
+        public int amountOfFish;
+        public Vector3 spawnBounds;
+        public float spawnHeight;
+        public int swimChangeFrequency;
+        public List<Color> fishColors = new();
+        public Transform spawnContainer;
 
-            // Instantiate objectPrefab, which is a fish, at spawnPoint with no rotation.
-            Transform t = (Transform)Instantiate(objectPrefab, spawnPoint, Quaternion.identity);
-            t.parent = spawnContainer;
-
-            // Add the instantiated transform to transformAccessArray.
-            transformAccessArray.Add(t);
-
-            // Set fish color
-            if (fishColors.Count > 0)
-            {
-                var renderer = t.gameObject.GetComponent<MeshRenderer>();
-                int colorIndex = Random.Range(0, fishColors.Count);
-                renderer.material.SetColor("_Color", fishColors[colorIndex]);
-            }
-        }
-    }
-
-    private void Update()
-    {
-        // All the variables within the main thread set the job's data. 
-        // seed gets the current millisecond from the system time to ensure a different seed for each call.
-        positionUpdateJob = new PositionUpdateJob()
-        {
-            objectVelocities = velocities,
-            jobDeltaTime = Time.deltaTime,
-            swimSpeed = this.swimSpeed,
-            turnSpeed = this.turnSpeed,
-            time = Time.time,
-            swimChangeFrequency = this.swimChangeFrequency,
-            center = waterObject.position,
-            bounds = spawnBounds,
-            seed = System.DateTimeOffset.Now.Millisecond
-        };
-
-        // Schedule positionUpdateJob. Note that each job type has its own Schedule() parameters. 
-        // A IJobParallelForTransform takes a TransformAccessArray.
-        positionUpdateJobHandle = positionUpdateJob.Schedule(transformAccessArray);
-    }
-
-    private void LateUpdate()
-    {
-        positionUpdateJobHandle.Complete();
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawWireCube(transform.position + Vector3.up * spawnHeight, spawnBounds);
-    }
-
-    private void OnDestroy()
-    {
-        transformAccessArray.Dispose();
-        velocities.Dispose();
-    }
-
-    [BurstCompile]
-    struct PositionUpdateJob : IJobParallelForTransform
-    {
-        public NativeArray<Vector3> objectVelocities;
-
-        public Vector3 bounds;
-        public Vector3 center;
-
-        public float jobDeltaTime;
-        public float time;
+        [Header("Settings")]
         public float swimSpeed;
         public float turnSpeed;
-        public int swimChangeFrequency;
 
-        public float seed;
-
-        public void Execute(int i, TransformAccess transform)
+        private void Start()
         {
-            // Sets the current velocity of the fish.
-            Vector3 currentVelocity = objectVelocities[i];
+            // Initialize velocities with a persistent allocator of size amountOfFish, which is a pre-declared variable.
+            velocities = new NativeArray<Vector3>(amountOfFish, Allocator.Persistent);
 
-            // Uses Unity's Mathematics library to create a psuedorandom number generator that creates a seed 
-            // by using the index and system time.           
-            random randomGen = new random((uint)(i * time + 1 + seed));
+            // Initialize transformAccessArray with size amountOfFish.
+            transformAccessArray = new TransformAccessArray(amountOfFish);
 
-            // Moves the transform along its local forward direction, using localToWorldMatrix.
-            transform.position +=
-                transform.localToWorldMatrix.MultiplyVector(new Vector3(0, 0, 1)) *
-                swimSpeed *
-                jobDeltaTime *
-                randomGen.NextFloat(0.3f, 1.0f);
-
-            // Rotates the transform in the direction of currentVelocity.
-            if (currentVelocity != Vector3.zero)
+            for (int i = 0; i < amountOfFish; i++)
             {
-                transform.rotation =
-                    Quaternion.Lerp(transform.rotation,
-                    Quaternion.LookRotation(currentVelocity), turnSpeed * jobDeltaTime);
-            }
 
-            // Check for fish-out-of-water
-            Vector3 currentPosition = transform.position;
+                float distanceX =
+                Random.Range(-spawnBounds.x / 2, spawnBounds.x / 2);
 
-            bool randomise = true;
+                float distanceZ =
+                Random.Range(-spawnBounds.z / 2, spawnBounds.z / 2);
 
-            // Check the position of the transform against the boundaries. 
-            // If it's outside, the velocity flips towards the center.
-            if (currentPosition.x > center.x + bounds.x / 2 ||
-                currentPosition.x < center.x - bounds.x / 2 ||
-                currentPosition.z > center.z + bounds.z / 2 ||
-                currentPosition.z < center.z - bounds.z / 2)
-            {
-                Vector3 internalPosition = new Vector3(center.x +
-                    randomGen.NextFloat(-bounds.x / 2, bounds.x / 2) / 1.3f,
-                    0,
-                    center.z + randomGen.NextFloat(-bounds.z / 2, bounds.z / 2) / 1.3f);
+                // Create a random spawn point within spawnBounds.
+                Vector3 spawnPoint = (transform.position + Vector3.up * spawnHeight) + new Vector3(distanceX, 0, distanceZ);
 
-                currentVelocity = (internalPosition - currentPosition).normalized;
+                // Instantiate objectPrefab, which is a fish, at spawnPoint with no rotation.
+                Transform t = (Transform)Instantiate(objectPrefab, spawnPoint, Quaternion.identity);
+                t.parent = spawnContainer;
 
-                objectVelocities[i] = currentVelocity;
+                // Add the instantiated transform to transformAccessArray.
+                transformAccessArray.Add(t);
 
-                transform.rotation = Quaternion.Lerp(transform.rotation,
-                    Quaternion.LookRotation(currentVelocity),
-                    turnSpeed * jobDeltaTime * 2);
-
-                randomise = false;
-            }
-
-            // If the transform is within the boundaries, there's a small possibility 
-            // that the direction will shift to give the fish a more natural movement.
-            if (randomise)
-            {
-                if (randomGen.NextInt(0, swimChangeFrequency) <= 2)
+                // Set fish color
+                if (fishColors.Count > 0)
                 {
-                    objectVelocities[i] = new Vector3(randomGen.NextFloat(-1f, 1f), 0, randomGen.NextFloat(-1f, 1f));
+                    var renderer = t.gameObject.GetComponent<MeshRenderer>();
+                    int colorIndex = Random.Range(0, fishColors.Count);
+                    renderer.material.SetColor("_Color", fishColors[colorIndex]);
+                }
+            }
+        }
+
+        private void Update()
+        {
+            // All the variables within the main thread set the job's data. 
+            // seed gets the current millisecond from the system time to ensure a different seed for each call.
+            positionUpdateJob = new PositionUpdateJob()
+            {
+                objectVelocities = velocities,
+                jobDeltaTime = Time.deltaTime,
+                swimSpeed = this.swimSpeed,
+                turnSpeed = this.turnSpeed,
+                time = Time.time,
+                swimChangeFrequency = this.swimChangeFrequency,
+                center = waterObject.position,
+                bounds = spawnBounds,
+                seed = System.DateTimeOffset.Now.Millisecond
+            };
+
+            // Schedule positionUpdateJob. Note that each job type has its own Schedule() parameters. 
+            // A IJobParallelForTransform takes a TransformAccessArray.
+            positionUpdateJobHandle = positionUpdateJob.Schedule(transformAccessArray);
+        }
+
+        private void LateUpdate()
+        {
+            positionUpdateJobHandle.Complete();
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireCube(transform.position + Vector3.up * spawnHeight, spawnBounds);
+        }
+
+        private void OnDestroy()
+        {
+            transformAccessArray.Dispose();
+            velocities.Dispose();
+        }
+
+        [BurstCompile]
+        struct PositionUpdateJob : IJobParallelForTransform
+        {
+            public NativeArray<Vector3> objectVelocities;
+
+            public Vector3 bounds;
+            public Vector3 center;
+
+            public float jobDeltaTime;
+            public float time;
+            public float swimSpeed;
+            public float turnSpeed;
+            public int swimChangeFrequency;
+
+            public float seed;
+
+            public void Execute(int i, TransformAccess transform)
+            {
+                // Sets the current velocity of the fish.
+                Vector3 currentVelocity = objectVelocities[i];
+
+                // Uses Unity's Mathematics library to create a psuedorandom number generator that creates a seed 
+                // by using the index and system time.           
+                random randomGen = new random((uint)(i * time + 1 + seed));
+
+                // Moves the transform along its local forward direction, using localToWorldMatrix.
+                transform.position +=
+                    transform.localToWorldMatrix.MultiplyVector(new Vector3(0, 0, 1)) *
+                    swimSpeed *
+                    jobDeltaTime *
+                    randomGen.NextFloat(0.3f, 1.0f);
+
+                // Rotates the transform in the direction of currentVelocity.
+                if (currentVelocity != Vector3.zero)
+                {
+                    transform.rotation =
+                        Quaternion.Lerp(transform.rotation,
+                        Quaternion.LookRotation(currentVelocity), turnSpeed * jobDeltaTime);
+                }
+
+                // Check for fish-out-of-water
+                Vector3 currentPosition = transform.position;
+
+                bool randomise = true;
+
+                // Check the position of the transform against the boundaries. 
+                // If it's outside, the velocity flips towards the center.
+                if (currentPosition.x > center.x + bounds.x / 2 ||
+                    currentPosition.x < center.x - bounds.x / 2 ||
+                    currentPosition.z > center.z + bounds.z / 2 ||
+                    currentPosition.z < center.z - bounds.z / 2)
+                {
+                    Vector3 internalPosition = new Vector3(center.x +
+                        randomGen.NextFloat(-bounds.x / 2, bounds.x / 2) / 1.3f,
+                        0,
+                        center.z + randomGen.NextFloat(-bounds.z / 2, bounds.z / 2) / 1.3f);
+
+                    currentVelocity = (internalPosition - currentPosition).normalized;
+
+                    objectVelocities[i] = currentVelocity;
+
+                    transform.rotation = Quaternion.Lerp(transform.rotation,
+                        Quaternion.LookRotation(currentVelocity),
+                        turnSpeed * jobDeltaTime * 2);
+
+                    randomise = false;
+                }
+
+                // If the transform is within the boundaries, there's a small possibility 
+                // that the direction will shift to give the fish a more natural movement.
+                if (randomise)
+                {
+                    if (randomGen.NextInt(0, swimChangeFrequency) <= 2)
+                    {
+                        objectVelocities[i] = new Vector3(randomGen.NextFloat(-1f, 1f), 0, randomGen.NextFloat(-1f, 1f));
+                    }
                 }
             }
         }
     }
-
 }
