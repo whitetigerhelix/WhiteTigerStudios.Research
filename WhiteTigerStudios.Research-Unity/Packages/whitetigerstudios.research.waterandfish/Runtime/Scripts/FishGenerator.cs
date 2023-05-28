@@ -28,6 +28,7 @@
  * THE SOFTWARE.
  */
 
+using System.Collections.Generic;
 using Unity.Jobs;
 using Unity.Collections;
 using Unity.Burst;
@@ -62,6 +63,8 @@ public class FishGenerator : MonoBehaviour
     public Vector3 spawnBounds;
     public float spawnHeight;
     public int swimChangeFrequency;
+    public List<Color> fishColors = new();
+    public Transform spawnContainer;
 
     [Header("Settings")]
     public float swimSpeed;
@@ -89,9 +92,18 @@ public class FishGenerator : MonoBehaviour
 
             // Instantiate objectPrefab, which is a fish, at spawnPoint with no rotation.
             Transform t = (Transform)Instantiate(objectPrefab, spawnPoint, Quaternion.identity);
+            t.parent = spawnContainer;
 
             // Add the instantiated transform to transformAccessArray.
             transformAccessArray.Add(t);
+
+            // Set fish color
+            if (fishColors.Count > 0)
+            {
+                var renderer = t.gameObject.GetComponent<MeshRenderer>();
+                int colorIndex = Random.Range(0, fishColors.Count);
+                renderer.material.SetColor("_Color", fishColors[colorIndex]);
+            }
         }
     }
 
