@@ -440,13 +440,31 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f1bbd5f4bf38d2448c27fd8bb2396e8, type: 3}
+  m_Script: {fileID: 11500000, guid: b8f121540b656c245b5dacd5e53f7e10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 50
-  sensitivity: 2
+  player: {fileID: 1010482367}
+  followSpeed: 5
+  minZoom: 5
+  maxZoom: 25
+  zoomSpeed: 10
+  easingAmount: 0.1
+  offsetFromPlayer: {x: 5, y: 3, z: 0}
+  doZoomForSpeed: 0
+--- !u!114 &1010482367 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5690486413460198112, guid: 6e3c1766d700a20488d149f3b444a15d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1225478455142629587}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c1ac98b989c8d546b4d728d4dcb838c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1578604284
 GameObject:
   m_ObjectHideFlags: 0
