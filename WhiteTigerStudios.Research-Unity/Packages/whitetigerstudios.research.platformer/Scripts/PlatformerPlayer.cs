@@ -10,17 +10,28 @@ namespace WhitetigerStudios.Research.Platformer
     {
         [SerializeField] private float moveSpeed = 200f;
         [SerializeField] private float jumpImpulse = 25f;
-        //[SerializeField] private float smoothness = 1f;     // Smooth movement
         [SerializeField] private Rigidbody rigidBody;
         public Rigidbody RigidBody => rigidBody;
+
+        private Vector3 previousMovement = Vector3.zero;
 
         private void FixedUpdate()
         {
             // Walk
             float moveAmount = Input.GetAxisRaw("Horizontal");
-            //float smoothedMoveAmount = Mathf.Lerp(currentMoveAmount, moveAmount, smoothness * Time.fixedDeltaTime);
-            //Vector3 movement = (Vector3.forward * smoothedMoveAmount).normalized * moveSpeed * Time.fixedDeltaTime;
-            Vector3 movement = (Vector3.forward * moveAmount).normalized * moveSpeed * Time.fixedDeltaTime;
+
+            Vector3 movement = Vector3.zero;
+            if (moveAmount != 0f)
+            {
+                movement = transform.forward * moveAmount * moveSpeed * Time.fixedDeltaTime;
+            }
+            else if (previousMovement != Vector3.zero && rigidBody.velocity.sqrMagnitude > 0f)
+            {
+                float damping = 5f;
+                movement = Vector3.Lerp(Vector3.zero, -previousMovement * 0.4f, Time.fixedDeltaTime * damping);
+            }
+            previousMovement = movement;
+
             movement.y = rigidBody.velocity.y;
             rigidBody.velocity = movement;
 

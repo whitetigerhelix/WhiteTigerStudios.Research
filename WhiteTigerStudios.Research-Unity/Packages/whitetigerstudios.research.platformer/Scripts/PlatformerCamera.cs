@@ -20,22 +20,28 @@ namespace WhitetigerStudios.Research.Platformer
         [SerializeField] private bool doZoomForSpeed = false;
 
         private Camera _camera;
+        private Transform _playerTransform;
+        private Rigidbody _playerRigidbody;
+
+        private Vector3 _currentVelocity;
 
         private void Awake()
         {
             _camera = Camera.main;
+            _playerTransform = player.transform;
+            _playerRigidbody = player.RigidBody;
         }
 
         private void LateUpdate()
         {
             // Follow target
-            Vector3 targetPos = player.transform.position + offsetFromPlayer;
-            transform.position = Vector3.Lerp(transform.position, targetPos, followSpeed * Time.deltaTime);
+            Vector3 targetPos = _playerTransform.position + offsetFromPlayer;
+            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref _currentVelocity, followSpeed * Time.deltaTime);
 
             // Zoom based on target's speed
             if (doZoomForSpeed)
             {
-                float zoomLevel = Mathf.Lerp(maxZoom, minZoom, player.RigidBody.velocity.magnitude / zoomSpeed);
+                float zoomLevel = Mathf.Lerp(maxZoom, minZoom, _playerRigidbody.velocity.magnitude / zoomSpeed);
                 _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, zoomLevel, easingAmount);
             }
         }
