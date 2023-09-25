@@ -120,7 +120,8 @@ namespace WhitetigerStudios.Research.Platformer
         {
             bool wasHit = Physics.Raycast(origin, direction, out hitInfo, maxDistance);
 
-            if (showGizmos)
+//TODO: This needs to be in the OnDrawGizmos functions
+            /*if (showGizmos)
             {
                 if (rayColor == null)
                 {
@@ -128,7 +129,7 @@ namespace WhitetigerStudios.Research.Platformer
                 }
                 Debug.DrawRay(origin, hitInfo.point - origin, (Color)rayColor);
                 Gizmos.DrawSphere(hitInfo.point, hitSphereRadius);  //TODO: Set color
-            }
+            }*/
 
             return wasHit;
         }

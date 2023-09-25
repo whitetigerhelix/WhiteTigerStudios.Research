@@ -579,12 +579,12 @@ PrefabInstance:
     - target: {fileID: 8975991156961282307, guid: 6e3c1766d700a20488d149f3b444a15d,
         type: 3}
       propertyPath: EnableDebugLogs
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8975991156961282307, guid: 6e3c1766d700a20488d149f3b444a15d,
         type: 3}
       propertyPath: EnableDebugVisualization
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e3c1766d700a20488d149f3b444a15d, type: 3}
