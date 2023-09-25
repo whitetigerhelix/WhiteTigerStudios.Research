@@ -1,7 +1,10 @@
 {
     "name": "whitetigerstudios.research",
+    "rootNamespace": "",
     "references": [
-        "WhiteTigerStudios.Research.WaterAndFish.Runtime"
+        "whitetigerstudios.research.platformer",
+        "whitetigerstudios.research.waterandfish",
+        "SynthCoder"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

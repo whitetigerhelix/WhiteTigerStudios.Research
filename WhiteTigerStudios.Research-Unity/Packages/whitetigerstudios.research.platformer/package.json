@@ -1,0 +1,19 @@
+{
+  "name": "com.whitetigerstudios.research.platformer",
+  "version": "1.0.0",
+  "displayName": "WhitetigerStudios.Research.Platformer",
+  "description": "Research from our labs: Platformer tech",
+  "unity": "2021.3",
+  "unityRelease": "15f1",
+  "dependencies": {
+  },
+  "keywords": [
+    "WhiteTigerStudios"
+  ],
+  "author": {
+    "name": "Chris Oje",
+    "email": "chrisoje@helionoctis.com"
+  },
+  "type": "library",
+  "hideInEditor": false
+}

@@ -1,8 +1,12 @@
-﻿using System;
+﻿// Copyright (c) 2023 - WhitetigerStudios
+using System;
 using UnityEngine;
 
 namespace WhiteTigerStudios.Research
 {
+    /// <summary>
+    /// Basic scene running management, including a label
+    /// </summary>
     public class SceneRunner : MonoBehaviour
     {
         private static Rect RectAtRow(int index)
@@ -22,7 +26,7 @@ namespace WhiteTigerStudios.Research
 
             try
             {
-                // Do anything that needs doing
+//TODO: Do anything that needs doing
             }
             catch (Exception ex)
             {
