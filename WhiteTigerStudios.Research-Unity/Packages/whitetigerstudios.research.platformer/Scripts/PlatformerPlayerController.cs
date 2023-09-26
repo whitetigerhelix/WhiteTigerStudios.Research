@@ -22,6 +22,8 @@ namespace WhitetigerStudios.Research.Platformer
     /// </summary>
     public class PlatformerPlayerController : MonoBehaviour
     {
+        public static PlatformerPlayerController Instance { get; private set; }
+
         [SerializeField] private PlatformerPlayer player;
         public PlatformerPlayer Player => player;
         public Collider PlayerCollider => Player.PlayerCollider;
@@ -46,6 +48,11 @@ namespace WhitetigerStudios.Research.Platformer
 
         public bool EnableDebugLogs = false;
         public bool EnableDebugVisualization = false;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Update()
         {

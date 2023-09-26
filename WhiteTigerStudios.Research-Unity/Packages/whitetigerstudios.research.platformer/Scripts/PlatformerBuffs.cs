@@ -8,5 +8,6 @@ namespace WhitetigerStudios.Research.Platformer
     /// </summary>
     public class PlatformerBuffs : MonoBehaviour
     {
+//TODO: Need to implement buffs for player
     }
 }

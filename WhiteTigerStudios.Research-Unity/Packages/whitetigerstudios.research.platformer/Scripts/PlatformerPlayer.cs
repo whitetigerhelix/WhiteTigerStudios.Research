@@ -16,8 +16,14 @@ namespace WhitetigerStudios.Research.Platformer
         [SerializeField] private Collider playerCollider;
         public Collider PlayerCollider => playerCollider;
         public PlayerState PlayerState => playerController.State;
+        [SerializeField] private Transform playerBody;
+        public Transform PlayerBody => playerBody;
+        [SerializeField] private Transform playerAnchor;
+        public Transform PlayerAnchor => playerAnchor;
 
         private Vector3 previousMovement = Vector3.zero;
+        
+        private const float EPSILON = 0.001f;
 
         private void FixedUpdate()
         {
@@ -48,6 +54,24 @@ namespace WhitetigerStudios.Research.Platformer
 
             movement.y = rigidBody.velocity.y;
             rigidBody.velocity = movement;
+
+            // Update player body direction
+//TODO: Smoothly rotate player body rather than snapping
+            if (movement.z > EPSILON)
+            {
+                // Moving forward
+                PlayerBody.localRotation = Quaternion.Euler(0f, 0f, 0f);
+            }
+            else if (movement.z < -EPSILON)
+            {
+                // Moving backward
+                PlayerBody.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            }
+            else
+            {
+                // Not moving in Z direction (face camera)
+                PlayerBody.localRotation = Quaternion.Euler(0f, 90f, 0f);
+            }
 
             // Jump
             if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space))

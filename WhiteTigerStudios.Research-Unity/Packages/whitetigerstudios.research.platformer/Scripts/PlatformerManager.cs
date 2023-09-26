@@ -8,5 +8,6 @@ namespace WhitetigerStudios.Research.Platformer
     /// </summary>
     public class PlatformerManager : MonoBehaviour
     {
+//TODO: Need to implement game state, etc
     }
 }

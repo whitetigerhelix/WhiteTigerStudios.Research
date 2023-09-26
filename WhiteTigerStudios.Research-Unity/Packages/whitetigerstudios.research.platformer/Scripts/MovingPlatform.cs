@@ -6,6 +6,7 @@ namespace WhitetigerStudios.Research.Platformer
 {
     /// <summary>
     /// Object that moves back and forth between two points.
+    /// Moves in the Z direction.
     /// </summary>
     public class MovingPlatform : PlatformerWorldObject
     {
