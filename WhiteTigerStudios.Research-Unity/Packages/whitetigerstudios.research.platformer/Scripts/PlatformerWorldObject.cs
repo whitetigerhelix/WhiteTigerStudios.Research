@@ -11,7 +11,7 @@ namespace WhitetigerStudios.Research.Platformer
         [Header("Platformer World Object Definition")]
 
         [SerializeField, Tooltip("A human readable name for this world object")]
-        private string surfaceName = "DefaultPlatformerWorldObject";
+        protected string surfaceName = "DefaultPlatformerWorldObject";
         public string SurfaceName => surfaceName;
     }
 }
